@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranches": [
+    "dev"
+  ],
+  "prConcurrentLimit": 1,
+  "extends": [
+    "github>yfhme/renovate-config"
+  ]
+}
