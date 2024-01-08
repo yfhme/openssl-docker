@@ -15,7 +15,7 @@ WORKDIR /tmp/src
 
 RUN build_deps="build-base linux-headers perl" && \
     apk update && apk upgrade && \
-    apk add $build_deps && \
+    apk add --no-cache $build_deps && \
     tar xzf openssl-$OPENSSL_VERSION.tar.gz && \
     cd openssl-$OPENSSL_VERSION && \
     ./config \
@@ -35,4 +35,4 @@ RUN build_deps="build-base linux-headers perl" && \
 
 WORKDIR /opt/openssl
 
-ENTRYPOINT /bin/sh
+CMD [ "/bin/sh" ]
