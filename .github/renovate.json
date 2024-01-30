@@ -9,8 +9,12 @@
   ],
   "packageRules": [
     {
-      "matchManagers": ["regex"],
-      "matchPackageNames": ["openssl/openssl"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "openssl/openssl"
+      ],
       "extractVersion": "^openssl-(?<version>.*)$"
     }
   ]
