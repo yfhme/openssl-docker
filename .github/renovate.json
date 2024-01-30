@@ -6,5 +6,12 @@
   "prConcurrentLimit": 1,
   "extends": [
     "github>yfhme/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "matchPackageNames": ["openssl/openssl"],
+      "extractVersion": "^openssl-(?<version>.*)$"
+    }
   ]
 }
