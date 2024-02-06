@@ -10,7 +10,7 @@ on:
     branches:
       - "main"
   schedule:
-    - cron: "27 6 * * *"
+    - cron: "27 6 * * 1"
 
 env:
   REGISTRY_IMAGE: yfhme/openssl-docker
