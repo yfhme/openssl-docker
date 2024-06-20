@@ -1,16 +1,19 @@
-name: docker build and push
+name: Docker Build And Push
 
 on:
+  merge_group:
   push:
     tags:
       - "v*.*.*"
+    branches:
+      - "renovate/**"
   pull_request:
     paths-ignore:
       - "**/renovate.json"
     branches:
       - "main"
   schedule:
-    - cron: "27 6 * * 1"
+    - cron: "27 2 * * 1"
 
 env:
   REGISTRY_IMAGE: yfhme/openssl-docker
@@ -18,22 +21,9 @@ env:
 
 jobs:
   build:
+    name: Docker Build And Push
     runs-on: ubuntu-latest
-    #strategy:
-    #  fail-fast: true
-    #  matrix:
-    #    include:
-    #      - platform: "linux/arm64"
-    #        arch: "ARM64"
-    #      - platform: "linux/amd64"
-    #        arch: "x64"
-    #runs-on: [self-hosted, "${{ matrix.arch }}"]
-
     steps:
-      #- name: Cleanout old digests for self-hosted runs
-      #  run: |
-      #    rm -rf /tmp/digests || true
-
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
@@ -45,7 +35,7 @@ jobs:
           tags: |
             type=schedule,pattern=weekly
             type=semver,pattern={{raw}}
-            type=edge,branch=main
+            type=edge,branch=dev
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -54,6 +44,8 @@ jobs:
         uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3.3.0
 
       - name: Login to Docker Hub
+        #if: (github.event_name == 'push') || (gihub.ref == '/refs/head/dev')
+        if: github.event.ref_type == 'tag'|| 'schedule'
         uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -70,7 +62,8 @@ jobs:
           docker run --rm ${{ env.TEST_TAG }} bin/openssl version -a
 
       - name: Build and push
-        if: ${{ github.event_name != 'pull_request' }}
+        #if: github.event_name != 'pull_request'
+        if: github.event.ref_type == 'tag' || 'schedule'
         id: build
         uses: docker/build-push-action@f6010ea70151369b06f0194be1051fbbdff851b2 # v6.0.2
         with:
@@ -79,51 +72,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          #outputs: type=image,name=${{ env.REGISTRY_IMAGE }},name-canonical=true,push=true
-
-      #- name: Export digest
-      #  run: |
-      #    mkdir -p /tmp/digests
-      #    digest="${{ steps.build.outputs.digest }}"
-      #    touch "/tmp/digests/${digest#sha256:}"
-
-      #- name: Upload digest
-      #  uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      #  with:
-      #    name: digests
-      #    path: /tmp/digests/*
-      #    if-no-files-found: error
-      #    retention-days: 1
-
-  #merge:
-  #  runs-on: ubuntu-latest
-  #  needs:
-  #    - build
-  #  steps:
-  #    - name: Download digests
-  #      uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
-  #      with:
-  #        name: digests
-  #        path: /tmp/digests
-  #    - name: Set up Docker Buildx
-  #      uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
-  #    - name: Docker meta
-  #      id: meta
-  #      uses: docker/metadata-action@dbef88086f6cef02e264edb7dbf63250c17cef6c # v5.5.0
-  #      with:
-  #        images: ${{ env.REGISTRY_IMAGE }}
-  #        flavor: |
-  #          latest=false
-  #    - name: Login to Docker Hub
-  #      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-  #      with:
-  #        username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #        password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #    - name: Create manifest list and push
-  #      working-directory: /tmp/digests
-  #      run: |
-  #        docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-  #          $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-  #    - name: Inspect image
-  #      run: |
-  #        docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
