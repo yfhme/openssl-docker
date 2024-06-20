@@ -3,7 +3,7 @@
 FROM alpine:3.20.0@sha256:77726ef6b57ddf65bb551896826ec38bc3e53f75cdde31354fbffb4f25238ebd
 
 # renovate: datasource=github-tags depName=openssl/openssl
-ENV OPENSSL_VERSION=3.3.0
+ENV OPENSSL_VERSION=3.3.1
 ENV OPENSSL_SHA256=53e66b043322a606abf0087e7699a0e033a37fa13feb9742df35c3a33b18fb02
 ENV OPENSSL_FILE=https://www.openssl.org/source/
 
