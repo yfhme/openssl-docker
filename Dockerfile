@@ -1,10 +1,10 @@
-# syntax=docker/dockerfile:1@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
+# syntax=docker/dockerfile:1.7.1@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
 
-FROM alpine:3.19.1@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
+FROM alpine:3.20.0@sha256:77726ef6b57ddf65bb551896826ec38bc3e53f75cdde31354fbffb4f25238ebd
 
 # renovate: datasource=github-tags depName=openssl/openssl
-ENV OPENSSL_VERSION=3.3.0
-ENV OPENSSL_SHA256=53e66b043322a606abf0087e7699a0e033a37fa13feb9742df35c3a33b18fb02
+ENV OPENSSL_VERSION=3.3.1
+ENV OPENSSL_SHA256=777cd596284c883375a2a7a11bf5d2786fc5413255efab20c50d6ffe6d020b7e
 ENV OPENSSL_FILE=https://www.openssl.org/source/
 
 ARG DEBIAN_FRONTEND=noninteractive
