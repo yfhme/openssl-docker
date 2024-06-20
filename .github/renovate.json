@@ -1,21 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": [
-    "dev"
-  ],
-  "prConcurrentLimit": 1,
-  "extends": [
-    "github>yfhme/renovate-config"
-  ],
+  "baseBranches": ["dev"],
+  "prConcurrentLimit": 3,
+  "extends": ["github>yfhme/renovate-config"],
+  "dependencyDashboard": true,
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchPackageNames": [
-        "openssl/openssl"
-      ],
+      "description": ["OpenSSL package"],
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["openssl/openssl"],
       "extractVersion": "^openssl-(?<version>.*)$"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "schedule": ["0 3 * * 1,5"],
+      "automerge": true,
+      "automergeStrategy": "rebase"
     }
   ]
 }
