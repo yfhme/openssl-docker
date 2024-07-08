@@ -46,7 +46,7 @@ jobs:
 
       - name: Login to Docker Hub
         #if: (github.event_name == 'push') || (gihub.ref == '/refs/head/dev')
-        if: github.event.ref_type == 'tag' || 'schedule'
+        if: github.event.ref_type == 'tag' || github.event.ref_type == 'schedule'
         uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -64,7 +64,7 @@ jobs:
 
       - name: Build and push
         #if: github.event_name != 'pull_request'
-        if: github.event.ref_type == 'tag' || 'schedule'
+        if: github.event.ref_type == 'tag' || github.event.ref_type == 'schedule'
         id: build
         uses: docker/build-push-action@f6010ea70151369b06f0194be1051fbbdff851b2 # v6.0.2
         with:
