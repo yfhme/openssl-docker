@@ -12,6 +12,7 @@ on:
       - "**/renovate.json"
     branches:
       - "main"
+      - "renovate/**"
   schedule:
     - cron: "27 2 * * 1"
 
