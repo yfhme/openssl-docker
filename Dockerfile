@@ -4,7 +4,7 @@ FROM alpine:3.20.3@sha256:a8f120106f5549715aa966fd7cefaf3b7045f6414fed428684de62
 
 # renovate: datasource=github-tags depName=openssl/openssl
 ENV OPENSSL_VERSION=3.4.0
-ENV OPENSSL_SHA256=2e8a40b01979afe8be0bbfb3de5dc1c6709fedb46d6c89c10da114ab5fc3d281
+ENV OPENSSL_SHA256=e15dda82fe2fe8139dc2ac21a36d4ca01d5313c75f99f46c4e8a27709b7294bf
 ENV OPENSSL_FILE=https://www.openssl.org/source/
 
 ARG DEBIAN_FRONTEND=noninteractive
